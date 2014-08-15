@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Text Grading</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+		<style>
+			#result,
+			#breakdown {
+				display: none;
+			}
+			#breakdown {
+				height: 100px;
+				list-style: none;
+			}
+			#breakdown::after {
+				content: "";
+				height: 100px;
+				display: inline-block;
+			}
+			#breakdown li {
+				background: #999;
+				display: inline-block;
+				margin-bottom: 20px;
+				margin-right: 10px;
+				text-align: center;
+				vertical-align: bottom;
+				width: 60px;
+			}
+			#source-text {
+				margin-bottom: 20px;
+				min-height: 200px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>
+				Text Grader
+				<a class="btn btn-primary pull-right" id="grade-btn"><i class="glyphicon glyphicon-refresh"></i> Re-Grade</a>
+			</h1>
+		</div>
+		<div class="container">
+			<h2 id="result"></h2>
+			<ul id="breakdown"></ul>
+			<div id="source-text-holder">
+				<textarea class="form-control" id="source-text" placeholder="Paste text here"></textarea>
+				<button class="btn btn-default" id="sample-1-btn">Sample 1</button>
+				<button class="btn btn-default" id="sample-2-btn">Sample 2</button>
+				<button class="btn btn-default" id="sample-3-btn">Sample 3</button>
+			</div>
+		</div>
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/promise-0.1.1.min.js"></script>
+		<script src="js/grader.js"></script>
+	</body>
+</html>
