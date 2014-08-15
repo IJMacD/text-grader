@@ -9,6 +9,11 @@ $(function(){
 		sample1Button = $('#sample-1-btn'),
 		sample2Button = $('#sample-2-btn'),
 		sample3Button = $('#sample-3-btn'),
+		explainButton = $('#explain-btn'),
+		explanation = $('#explanation'),
+		wordListList = $('#word-lists'),
+		decomposedText = $('#decomposed-text'),
+		ungradedList = $('#ungraded-list'),
 
 		/*
 		 * Parameters
@@ -28,6 +33,8 @@ $(function(){
 			"Grade 10": ["zany", "jerkin", "nausea", "gratuitous", "linear", "inept", "legality", "aspen", "amnesty", "barometer"],
 			"Grade 11": ["galore", "rotunda", "capitalism", "prevaricate", "visible", "exonerate", "superannuate", "luxuriate", "piebald", "crunch"]
 		},
+		
+		explain = false,
 
 		/*
 		 * Configuration
@@ -66,6 +73,30 @@ $(function(){
 		gradeSourceText();
 	});
 	
+	explainButton.on("click", function(){
+	
+		explain = !explain;
+		
+		if(explain){
+			gradeSourceText();
+		}
+	
+		explanation.toggle(explain);
+	});
+	
+	ungradedList.on("change", function(e){
+		var sel = $(e.target),
+			grade = sel.val(),
+			word = sel.parent().find('label').text();
+		
+		if(wordLists[grade]){
+			wordLists[grade].push(word);
+			
+			wordLists[grade].sort();
+			
+			gradeSourceText();
+		}
+	});
 
 	/*
 	 * Init
@@ -77,10 +108,23 @@ $(function(){
 	 */
 	function gradeSourceText(){
 		var text = sourceText.val(),
-			breakdown = gradeText(text);
+			breakdown,
+			decomposed;
+			
+		if(!text || !text.length){
+			return;
+		}
+		
+		breakdown = gradeText(text);
 		
 		showGrade(breakdown);
 		showBreakdown(breakdown);
+		
+		if(explain){
+			decomposed = decomposeText(text);
+			showWordLists(decomposed);
+			showDecomposedText(decomposed);
+		}
 	}
 	 
 	function gradeText(text){
@@ -199,8 +243,6 @@ $(function(){
 		
 		avg = sum / total;
 		
-		console.log(sum, total, avg);
-		
 		return index[Math.floor(avg-1)];
 	}
 	
@@ -238,5 +280,91 @@ $(function(){
 		}
 		
 		breakdownList.show();
+	}
+	
+	function showWordLists(hash){
+		var grade,
+			list,
+			listList,
+			wordItem;
+		
+		wordListList.empty();
+		
+		for(grade in wordLists){
+			if(wordLists.hasOwnProperty(grade)){
+				
+				listList = $('<ul>');
+				
+				wordLists[grade].forEach(function(word){
+					wordItem = $('<li>'+word+'</li>');
+					if(hash[word]){
+						wordItem.addClass("used");
+					}
+					listList.append(wordItem);
+				});
+				
+				list = $('<li>'+grade+'</li>');
+				list.append(listList);
+				
+				wordListList.append(list);
+			}
+		}
+	}
+	
+	function showDecomposedText(text){
+		var inWords = keys(text),
+			outWords = [],
+			unusedWords = [],
+			graderString;
+		
+		inWords.sort();
+		
+		// This is a slow algorithm
+		// Do not use! Only for explaining
+		inWords.forEach(function(word){
+			var grade,
+				wordList;
+			
+			for(grade in wordLists){
+				if(wordLists.hasOwnProperty(grade)){
+				
+					wordList = wordLists[grade];
+					
+					if(wordList.indexOf(word) != -1){
+						outWords.push('<span class="used">'+word+'</span>');
+						return;
+					}
+				}
+			}
+			
+			outWords.push(word);
+			unusedWords.push(word);
+		});
+		
+		decomposedText.html(outWords.join(" "));
+			
+		graderString = '<select><option></option>' + keys(wordLists).map(function(word){
+			return '<option>' + word + '</option>';
+		}).join("") + '</select>';
+		
+		ungradedList.empty();
+		ungradedList.append(
+			unusedWords.map(function(word){
+				return '<li><label>' + word + '</label>' + graderString + '</li>';
+			}).join('')
+		);
+	}
+	
+	function keys(hash){
+		var out = [],
+			key;
+		
+		for(key in hash){
+			if(hash.hasOwnProperty(key)){
+				out.push(key);
+			}
+		}
+		
+		return out;
 	}
 });
