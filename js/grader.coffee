@@ -70,7 +70,7 @@ $ ->
 
 	gradeText = (text) ->
 		decomposed = decomposeText text
-		totalWords = getTotalWords decomposed
+		totalWords = countUniqueWords decomposed
 		grades = {}
 
 		for own grade, wordList of wordLists
@@ -101,7 +101,15 @@ $ ->
 
 		hash
 
-	getTotalWords = (hash) ->
+	countTotalWords = (hash) ->
+		count = 0;
+
+		for own word, wordCount of hash
+			count += wordCount
+
+		count
+
+	countUniqueWords = (hash) ->
 		count = 0;
 
 		for own word, wordCount of hash

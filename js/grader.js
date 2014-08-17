@@ -4,7 +4,7 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   $(function() {
-    var breakdownList, calculateAverageGrade, calculateGrade, calculatePeakGrade, decomposeText, decomposedText, explain, explainButton, explanation, getTotalWords, gradeButton, gradeSourceText, gradeText, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, values, wordListList, wordLists, wordRegex;
+    var breakdownList, calculateAverageGrade, calculateGrade, calculatePeakGrade, countTotalWords, countUniqueWords, decomposeText, decomposedText, explain, explainButton, explanation, gradeButton, gradeSourceText, gradeText, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, values, wordListList, wordLists, wordRegex;
     sourceText = $('#source-text');
     resultText = $('#result');
     breakdownList = $('#breakdown');
@@ -53,7 +53,7 @@
     gradeText = function(text) {
       var currentGrade, decomposed, grade, grades, totalWords, word, wordList, _i, _len;
       decomposed = decomposeText(text);
-      totalWords = getTotalWords(decomposed);
+      totalWords = countUniqueWords(decomposed);
       grades = {};
       for (grade in wordLists) {
         if (!__hasProp.call(wordLists, grade)) continue;
@@ -90,7 +90,17 @@
       }
       return hash;
     };
-    getTotalWords = function(hash) {
+    countTotalWords = function(hash) {
+      var count, word, wordCount;
+      count = 0;
+      for (word in hash) {
+        if (!__hasProp.call(hash, word)) continue;
+        wordCount = hash[word];
+        count += wordCount;
+      }
+      return count;
+    };
+    countUniqueWords = function(hash) {
       var count, word, wordCount;
       count = 0;
       for (word in hash) {
