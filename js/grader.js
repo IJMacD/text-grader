@@ -4,7 +4,7 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   $(function() {
-    var breakdownList, calculateAverageGrade, calculateGrade, calculatePeakGrade, decomposeText, decomposedText, explain, explainButton, explanation, getTotalWords, gradeButton, gradeSourceText, gradeText, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, wordListList, wordLists, wordRegex;
+    var breakdownList, calculateAverageGrade, calculateGrade, calculatePeakGrade, decomposeText, decomposedText, explain, explainButton, explanation, getTotalWords, gradeButton, gradeSourceText, gradeText, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, values, wordListList, wordLists, wordRegex;
     sourceText = $('#source-text');
     resultText = $('#result');
     breakdownList = $('#breakdown');
@@ -109,13 +109,8 @@
     };
     calculatePeakGrade = function(grades) {
       var grade, max, peaks, value;
-      max = 0;
+      max = Math.max.apply(Math, values(grades));
       peaks = {};
-      for (grade in grades) {
-        if (!__hasProp.call(grades, grade)) continue;
-        value = grades[grade];
-        max = Math.max(max, value);
-      }
       for (grade in grades) {
         if (!__hasProp.call(grades, grade)) continue;
         value = grades[grade];
@@ -228,6 +223,16 @@
         if (!__hasProp.call(hash, key)) continue;
         value = hash[key];
         out.push(key);
+      }
+      return out;
+    };
+    values = function(hash) {
+      var key, out, value;
+      out = [];
+      for (key in hash) {
+        if (!__hasProp.call(hash, key)) continue;
+        value = hash[key];
+        out.push(value);
       }
       return out;
     };

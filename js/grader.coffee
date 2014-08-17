@@ -116,11 +116,8 @@ $ ->
 		calculatePeakGrade grades
 
 	calculatePeakGrade = (grades) ->
-		max = 0
+		max = Math.max values(grades)...
 		peaks = {}
-
-		for own grade, value of grades
-			max = Math.max max, value
 
 		for own grade, value of grades
 			if value is max
@@ -229,6 +226,14 @@ $ ->
 
 		for own key, value of hash
 			out.push key
+
+		out
+
+	values = (hash) ->
+		out = []
+
+		for own key, value of hash
+			out.push value
 
 		out
 
