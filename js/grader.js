@@ -54,25 +54,17 @@ $(function(){
 	 * Event Handlers
 	 */
 	gradeButton.on("click", gradeSourceText);
-	
-	sample1Button.on("click", function() {
-		sourceText.val(sampleTexts[0]);
-		
-		gradeSourceText();
-	});
-	
-	sample2Button.on("click", function() {
-		sourceText.val(sampleTexts[1]);
-		
-		gradeSourceText();
-	});
-	
-	sample3Button.on("click", function() {
-		sourceText.val(sampleTexts[2]);
-		
-		gradeSourceText();
-	});
-	
+
+	[sample1Button, sample2Button, sample3Button].map(
+		function(btn, i){
+			btn.on("click", function() {
+				sourceText.val(sampleTexts[i]);
+
+				gradeSourceText();
+			});
+		}
+	);
+
 	explainButton.on("click", function(){
 	
 		explain = !explain;
