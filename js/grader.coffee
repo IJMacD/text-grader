@@ -97,10 +97,7 @@ $ ->
 
 			word = word.toLowerCase()
 
-			if hash[word]?
-				hash[word]++;
-			else
-				hash[word] = 1
+			hash[word] = (hash[word] or 0) + 1
 
 		hash
 

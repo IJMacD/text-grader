@@ -86,11 +86,7 @@
       for (_i = 0, _len = words.length; _i < _len; _i++) {
         word = words[_i];
         word = word.toLowerCase();
-        if (hash[word] != null) {
-          hash[word]++;
-        } else {
-          hash[word] = 1;
-        }
+        hash[word] = (hash[word] || 0) + 1;
       }
       return hash;
     };
