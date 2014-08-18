@@ -124,9 +124,7 @@ $ ->
 		max = Math.max values(grades)...
 		peaks = {}
 
-		for own grade, value of grades
-			if value is max
-				peaks[grade] = value
+		peaks[grade] = value for own grade, value of grades when value is max
 
 		calculateAverageGrade peaks
 
