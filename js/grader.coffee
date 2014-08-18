@@ -1,287 +1,313 @@
 $ ->
-	#
-	# DOM
-	#
-	sourceText = $('#source-text')
-	resultText = $('#result')
-	breakdownList = $('#breakdown')
-	gradeButton = $('#grade-btn')
-	sample1Button = $('#sample-1-btn')
-	sample2Button = $('#sample-2-btn')
-	sample3Button = $('#sample-3-btn')
-	explainButton = $('#explain-btn')
-	explanation = $('#explanation')
-	wordListList = $('#word-lists')
-	decomposedText = $('#decomposed-text')
-	ungradedList = $('#ungraded-list')
-
-	#
-	# Parameters
-	#
-	wordLists =
-		"Pre": ["see", "play", "me", "at", "run", "go", "and", "look", "can", "here"]
-		"Grade K": ["you", "come", "not", "with", "jump", "help", "is", "work", "are", "this"]
-		"Grade 1": ["road", "live", "thank", "when", "bigger", "how", "always", "night", "spring", "today"]
-		"Grade 2": ["our", "please", "myself", "town", "early", "send", "wide", "believe", "quietly", "carefully"]
-		"Grade 3": ["city", "middle", "moment", "frightened", "exclaimed", "several", "lonely", "drew", "since", "straight"]
-		"Grade 4": ["decided", "served", "amazed", "silent", "wrecked", "improved", "certainly", "entered", "realized", "interrupted"]
-		"Grade 5": ["scanty", "business", "develop", "considered", "discussed", "behaved", "splendid", "acquainted", "escaped", "grim"]
-		"Grade 6": ["bridge", "commercial", "abolish", "trucker", "apparatus", "elementary", "comment", "necessity", "gallery", "relativity"]
-		"Grade 7": ["amber", "dominion", "sundry", "capillary", "impetuous", "blight", "wrest", "enumerate", "daunted", "condescend"]
-		"Grade 8": ["capacious", "limitation", "pretext", "intrigue", "delusion", "immaculate", "ascent", "acrid", "binocular", "embankment"]
-		"Grade 9": ["conscientious", "isolation", "molecule", "ritual", "momentous", "vulnerable", "kinship", "conservation", "jaunty", "inventive"]
-		"Grade 10": ["zany", "jerkin", "nausea", "gratuitous", "linear", "inept", "legality", "aspen", "amnesty", "barometer"]
-		"Grade 11": ["galore", "rotunda", "capitalism", "prevaricate", "visible", "exonerate", "superannuate", "luxuriate", "piebald", "crunch"]
-
-	explain = false
-
-	#
-	# Configuration
-	#
-	sampleTexts = [
-		"The boy is playing with his dog. You can see it run towards this tree. Look now it is jumping! How does it always manage to scare me?"
-		"I am both amazed and frightened by your ability to make me feel lonely. It certainly makes me develop a feeling that I am daunted by. I considered there to be a kinship with you. Instead I feel like that was just a delusion. I feel such isolation as though an inept blight befalls me."
-		"Oh what galore! Such a visible, momentous occasion. You have chosen to exonerate me! The acrid stench which once caused nausea, not from mere molecules, but from that truly zany situation."
-	]
 
-	#
-	# Data
-	#
-	wordRegex = /\w+/g
+  #
+  # DOM
+  #
+  sourceText = $('#source-text')
+  resultText = $('#result')
+  breakdownList = $('#breakdown')
+  gradeButton = $('#grade-btn')
+  sample1Button = $('#sample-1-btn')
+  sample2Button = $('#sample-2-btn')
+  sample3Button = $('#sample-3-btn')
+  explainButton = $('#explain-btn')
+  explanation = $('#explanation')
+  wordListList = $('#word-lists')
+  decomposedText = $('#decomposed-text')
+  ungradedList = $('#ungraded-list')
+
+  #
+  # Parameters
+  #
+  wordLists =
+    "Pre": ["see", "play", "me", "at", "run", "go", "and", "look", "can",
+      "here"]
+    "Grade K": ["you", "come", "not", "with", "jump", "help", "is", "work",
+      "are", "this"]
+    "Grade 1": ["road", "live", "thank", "when", "bigger", "how", "always",
+      "night", "spring", "today"]
+    "Grade 2": ["our", "please", "myself", "town", "early", "send", "wide",
+      "believe", "quietly", "carefully"]
+    "Grade 3": ["city", "middle", "moment", "frightened", "exclaimed",
+      "several", "lonely", "drew", "since", "straight"]
+    "Grade 4": ["decided", "served", "amazed", "silent", "wrecked", "improved",
+      "certainly", "entered", "realized", "interrupted"]
+    "Grade 5": ["scanty", "business", "develop", "considered", "discussed",
+      "behaved", "splendid", "acquainted", "escaped", "grim"]
+    "Grade 6": ["bridge", "commercial", "abolish", "trucker", "apparatus",
+      "elementary", "comment", "necessity", "gallery", "relativity"]
+    "Grade 7": ["amber", "dominion", "sundry", "capillary", "impetuous",
+      "blight", "wrest", "enumerate", "daunted", "condescend"]
+    "Grade 8": ["capacious", "limitation", "pretext", "intrigue", "delusion",
+      "immaculate", "ascent", "acrid", "binocular", "embankment"]
+    "Grade 9": ["conscientious", "isolation", "molecule", "ritual", "momentous",
+      "vulnerable", "kinship", "conservation", "jaunty", "inventive"]
+    "Grade 10": ["zany", "jerkin", "nausea", "gratuitous", "linear", "inept",
+      "legality", "aspen", "amnesty", "barometer"]
+    "Grade 11": ["galore", "rotunda", "capitalism", "prevaricate", "visible",
+      "exonerate", "superannuate", "luxuriate", "piebald", "crunch"]
+
+  explain = false
+
+  #
+  # Configuration
+  #
+  sampleTexts = [
+    "The boy is playing with his dog. You can see it run towards this tree.
+    Look now it is jumping! How does it always manage to scare me?"
+
+    "I am both amazed and frightened by your ability to make me feel lonely.
+    It certainly makes me develop a feeling that I am daunted by. I considered
+    there to be a kinship with you. Instead I feel like that was just a
+    delusion. I feel such isolation as though an inept blight befalls me."
+
+    "Oh what galore! Such a visible, momentous occasion. You have chosen to
+    exonerate me! The acrid stench which once caused nausea, not from mere
+    molecules, but from that truly zany situation."
+  ]
+
+  #
+  # Data
+  #
+  wordRegex = /\w+/g
+
+  #
+  # Functions
+  #
+
+  gradeSourceText = ->
+    text = sourceText.val()
+
+    if not text? or text.length is 0
+      return
 
-	#
-	# Functions
-	#
-	gradeSourceText = ->
-		text = sourceText.val()
+    breakdown = gradeText text
 
-		if not text? or text.length is 0
-			return
+    showGrade breakdown
+    showBreakdown breakdown
+
+    if explain
+      decomposed = decomposeText text
+      showWordLists decomposed
+      showDecomposedText decomposed
+
+  gradeText = (text) ->
+    decomposed = decomposeText text
+    totalWords = countUniqueWords decomposed
+    grades = {}
+
+    for own grade, wordList of wordLists
+
+      currentGrade = 0
 
-		breakdown = gradeText text
+      for word in wordList
+        if decomposed[word]?
+          currentGrade++
 
-		showGrade breakdown
-		showBreakdown breakdown
+      grades[grade] = currentGrade / totalWords
 
-		if explain
-			decomposed = decomposeText text
-			showWordLists decomposed
-			showDecomposedText decomposed
+    grades
 
-	gradeText = (text) ->
-		decomposed = decomposeText text
-		totalWords = countUniqueWords decomposed
-		grades = {}
+  sortWordLists = ->
+    for own grade, wordList of wordLists
+      wordList.sort()
 
-		for own grade, wordList of wordLists
+  decomposeText = (text) ->
+    words = text.match wordRegex
+    hash = {}
 
-			currentGrade = 0
+    for word in words
 
-			for word in wordList
-				if decomposed[word]?
-					currentGrade++
+      word = word.toLowerCase()
 
-			grades[grade] = currentGrade / totalWords
+      hash[word] = (hash[word] or 0) + 1
 
-		grades
+    hash
 
-	sortWordLists = ->
-		for own grade, wordList of wordLists
-			wordList.sort()
+  countTotalWords = (hash) ->
+    count = 0
 
-	decomposeText = (text) ->
-		words = text.match wordRegex
-		hash = {}
+    for own word, wordCount of hash
+      count += wordCount
 
-		for word in words
+    count
 
-			word = word.toLowerCase()
+  countUniqueWords = (hash) ->
+    count = 0
 
-			hash[word] = (hash[word] or 0) + 1
+    for own word, wordCount of hash
+      count++
 
-		hash
+    count
 
-	countTotalWords = (hash) ->
-		count = 0;
+  calculateGrade = (grades) ->
+    calculatePeakGrade grades
 
-		for own word, wordCount of hash
-			count += wordCount
+  calculatePeakGrade = (grades) ->
+    max = Math.max values(grades)...
+    peaks = {}
 
-		count
+    peaks[grade] = value for own grade, value of grades when value is max
 
-	countUniqueWords = (hash) ->
-		count = 0;
+    calculateAverageGrade peaks
 
-		for own word, wordCount of hash
-			count++
+  calculateAverageGrade = (grades) ->
+    i = 1
+    sum = 0
+    total = 0
+    index = []
 
-		count
+    for own grade, value of grades
+      index.push grade
 
-	calculateGrade = (grades) ->
-		calculatePeakGrade grades
+      sum += i * value
+      total += value
 
-	calculatePeakGrade = (grades) ->
-		max = Math.max values(grades)...
-		peaks = {}
+      i++
 
-		peaks[grade] = value for own grade, value of grades when value is max
+    avg = sum / total
 
-		calculateAverageGrade peaks
+    index[Math.floor avg-1]
 
-	calculateAverageGrade = (grades) ->
-		i = 1
-		sum = 0
-		total = 0
-		index = []
+  showGrade = (grades) ->
+    grade = calculateGrade grades
 
-		for own grade, value of grades
-			index.push grade
+    resultText.text grade
+    resultText.show()
 
-			sum += i * value
-			total += value
+  showBreakdown = (grades) ->
+    calcGrade = calculateGrade grades
 
-			i++
+    breakdownList.empty()
 
-		avg = sum / total;
+    for own grade, value of grades
+      value = grades[grade]
+      r = 255 * (1-value)
+      g = 255 * Math.sin value * Math.PI * 2
+      b = 128
+      $ '<li title="' + grade + '">' + (value*100).toFixed() + '%</li>'
+      .css
+        'height': value * 200
+        'background': 'rgba(' + r.toFixed() + ', ' + g.toFixed() + ', ' +
+          b.toFixed() + ', 1)'
+        'box-shadow': if grade is calcGrade then '0 0 5px 5px yellow' else ''
+      .appendTo breakdownList
 
-		index[Math.floor avg-1]
+    breakdownList.show()
 
-	showGrade = (grades) ->
-		grade = calculateGrade grades
+  showWordLists = (hash) ->
 
-		resultText.text grade
-		resultText.show()
+    wordListList.empty()
 
-	showBreakdown = (grades) ->
-		calcGrade = calculateGrade grades
+    for own grade, wordList of wordLists
+      listList = $ '<ul>'
 
-		breakdownList.empty()
+      for word in wordList
+        wordItem = $ '<li>' + word + '</li>'
+        if hash[word]?
+          wordItem.addClass "used"
 
-		for own grade, value of grades
-			value = grades[grade]
-			r = 255 * (1-value)
-			g = 255 * Math.sin value * Math.PI * 2
-			b = 128
-			$ '<li title="' + grade + '">' + (value*100).toFixed() + '%</li>'
-			.css
-				'height': value * 200
-				'background': 'rgba(' + r.toFixed() + ', ' + g.toFixed() + ', ' + b.toFixed() + ', 1)'
-				'box-shadow': if grade is calcGrade then '0 0 5px 5px yellow' else ''
-			.appendTo breakdownList
+        listList.append wordItem
 
-		breakdownList.show()
+      list = $ '<li>' + grade + '</li>'
+      list.append listList
 
-	showWordLists = (hash) ->
+      wordListList.append list
 
-		wordListList.empty()
+  showDecomposedText = (text) ->
+    inWords = keys text
+    outWords = []
+    unusedWords = []
 
-		for own grade, wordList of wordLists
-			listList = $ '<ul>'
+    inWords.sort()
 
-			for word in wordList
-				wordItem = $ '<li>' + word + '</li>'
-				if hash[word]?
-					wordItem.addClass "used"
+    # This is a slow algorithm
+    # Do not use! Only for explaining
+    for word in inWords
+      found = false
 
-				listList.append wordItem
+      for own grade, wordList of wordLists
 
-			list = $ '<li>' + grade + '</li>'
-			list.append listList
+        if word in wordList
+          outWords.push '<span class="used">' + word + '</span>'
+          found = true
+          break
 
-			wordListList.append list
+      if not found
+        outWords.push word
+        unusedWords.push word
 
-	showDecomposedText = (text) ->
-		inWords = keys text
-		outWords = []
-		unusedWords = []
+    decomposedText.html( outWords.join " " )
 
-		inWords.sort()
+    graderString = '<select><option></option>' + (keys( wordLists ).map(
+      (word) ->
+        return '<option>' + word + '</option>'
+    ).join "") + '</select>'
 
-		# This is a slow algorithm
-		# Do not use! Only for explaining
-		for word in inWords
-			found = false
+    ungradedList.empty()
+    ungradedList.append unusedWords.map(
+      (word) ->
+        return '<li><label>' + word + '</label>' + graderString + '</li>'
+    ).join ''
 
-			for own grade, wordList of wordLists
+  keys = (hash) ->
+    out = []
 
-				if word in wordList
-					outWords.push '<span class="used">' + word + '</span>'
-					found = true
-					break
+    for own key, value of hash
+      out.push key
 
-			if not found
-				outWords.push word
-				unusedWords.push word
+    out
 
-		decomposedText.html( outWords.join " " )
+  values = (hash) ->
+    out = []
 
-		graderString = '<select><option></option>' + (keys( wordLists ).map( (word) ->
-			return '<option>' + word + '</option>';
-		).join "") + '</select>'
+    for own key, value of hash
+      out.push value
 
-		ungradedList.empty()
-		ungradedList.append unusedWords.map( (word) ->
-			return '<li><label>' + word + '</label>' + graderString + '</li>'
-		).join ''
+    out
 
-	keys = (hash) ->
-		out = []
+  #
+  # Init
+  #
+  sortWordLists()
 
-		for own key, value of hash
-			out.push key
+  #
+  # Event Handlers
+  #
+  gradeButton.on "click", gradeSourceText
 
-		out
+  sample1Button.on "click", ->
+    sourceText.val sampleTexts[0]
 
-	values = (hash) ->
-		out = []
+    gradeSourceText()
 
-		for own key, value of hash
-			out.push value
+  sample2Button.on "click", ->
+    sourceText.val sampleTexts[1]
 
-		out
+    gradeSourceText()
 
-	#
-	# Init
-	#
-	sortWordLists()
+  sample3Button.on "click", ->
+    sourceText.val sampleTexts[2]
 
-	#
-	# Event Handlers
-	#
-	gradeButton.on "click", gradeSourceText
+    gradeSourceText()
 
-	sample1Button.on "click", ->
-		sourceText.val sampleTexts[0]
+  explainButton.on "click", ->
 
-		gradeSourceText()
+    explain = not explain
 
-	sample2Button.on "click", ->
-		sourceText.val sampleTexts[1]
+    if explain
+      gradeSourceText()
 
-		gradeSourceText()
+    explanation.toggle explain
 
-	sample3Button.on "click", ->
-		sourceText.val sampleTexts[2]
+  ungradedList.on "change", (e) ->
+    sel = $ e.target
+    grade = sel.val()
+    word = sel.parent().find('label')?.text()
 
-		gradeSourceText()
+    if wordLists[grade]?
+      wordLists[grade].push word
 
-	explainButton.on "click", ->
+      wordLists[grade].sort()
 
-		explain = not explain
-
-		if explain
-			gradeSourceText()
-
-		explanation.toggle explain
-
-	ungradedList.on "change", (e) ->
-		sel = $ e.target
-		grade = sel.val()
-		word = sel.parent().find('label')?.text()
-
-		if wordLists[grade]?
-			wordLists[grade].push word
-
-			wordLists[grade].sort()
-
-			gradeSourceText()
+      gradeSourceText()
