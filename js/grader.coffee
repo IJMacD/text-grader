@@ -225,16 +225,17 @@ $ ->
     # Do not use! Only for explaining
     for word in inWords
       found = false
+      countText = '<span class="count">' + "&times;" + text[word] + '</span>'
 
       for own grade, wordList of wordLists
 
         if word in wordList
-          outWords.push '<span class="used">' + word + '</span>'
+          outWords.push '<span class="used">' + word + countText + '</span>'
           found = true
           break
 
       if not found
-        outWords.push word
+        outWords.push word + countText
         unusedWords.push word
 
     decomposedText.html( outWords.join " " )
@@ -276,20 +277,12 @@ $ ->
   #
   gradeButton.on "click", gradeSourceText
 
-  sample1Button.on "click", ->
-    sourceText.val sampleTexts[0]
+  for btn, i in [sample1Button, sample2Button, sample3Button]
+    do (i) ->
+      btn.on "click", ->
+        sourceText.val sampleTexts[i]
 
-    gradeSourceText()
-
-  sample2Button.on "click", ->
-    sourceText.val sampleTexts[1]
-
-    gradeSourceText()
-
-  sample3Button.on "click", ->
-    sourceText.val sampleTexts[2]
-
-    gradeSourceText()
+        gradeSourceText()
 
   explainButton.on "click", ->
 

@@ -4,7 +4,7 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   $(function() {
-    var breakdownList, calculateAverageGrade, calculateGrade, calculatePeakGrade, countTotalWords, countUniqueWords, decomposeText, decomposedText, explain, explainButton, explanation, gradeButton, gradeSourceText, gradeText, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, values, wordListList, wordLists, wordRegex;
+    var breakdownList, btn, calculateAverageGrade, calculateGrade, calculatePeakGrade, countTotalWords, countUniqueWords, decomposeText, decomposedText, explain, explainButton, explanation, gradeButton, gradeSourceText, gradeText, i, keys, resultText, sample1Button, sample2Button, sample3Button, sampleTexts, showBreakdown, showDecomposedText, showGrade, showWordLists, sortWordLists, sourceText, ungradedList, values, wordListList, wordLists, wordRegex, _fn, _i, _len, _ref;
     sourceText = $('#source-text');
     resultText = $('#result');
     breakdownList = $('#breakdown');
@@ -191,7 +191,7 @@
       return _results;
     };
     showDecomposedText = function(text) {
-      var found, grade, graderString, inWords, outWords, unusedWords, word, wordList, _i, _len;
+      var countText, found, grade, graderString, inWords, outWords, unusedWords, word, wordList, _i, _len;
       inWords = keys(text);
       outWords = [];
       unusedWords = [];
@@ -199,17 +199,18 @@
       for (_i = 0, _len = inWords.length; _i < _len; _i++) {
         word = inWords[_i];
         found = false;
+        countText = '<span class="count">' + "&times;" + text[word] + '</span>';
         for (grade in wordLists) {
           if (!__hasProp.call(wordLists, grade)) continue;
           wordList = wordLists[grade];
           if (__indexOf.call(wordList, word) >= 0) {
-            outWords.push('<span class="used">' + word + '</span>');
+            outWords.push('<span class="used">' + word + countText + '</span>');
             found = true;
             break;
           }
         }
         if (!found) {
-          outWords.push(word);
+          outWords.push(word + countText);
           unusedWords.push(word);
         }
       }
@@ -244,18 +245,17 @@
     };
     sortWordLists();
     gradeButton.on("click", gradeSourceText);
-    sample1Button.on("click", function() {
-      sourceText.val(sampleTexts[0]);
-      return gradeSourceText();
-    });
-    sample2Button.on("click", function() {
-      sourceText.val(sampleTexts[1]);
-      return gradeSourceText();
-    });
-    sample3Button.on("click", function() {
-      sourceText.val(sampleTexts[2]);
-      return gradeSourceText();
-    });
+    _ref = [sample1Button, sample2Button, sample3Button];
+    _fn = function(i) {
+      return btn.on("click", function() {
+        sourceText.val(sampleTexts[i]);
+        return gradeSourceText();
+      });
+    };
+    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+      btn = _ref[i];
+      _fn(i);
+    }
     explainButton.on("click", function() {
       explain = !explain;
       if (explain) {
@@ -264,10 +264,10 @@
       return explanation.toggle(explain);
     });
     return ungradedList.on("change", function(e) {
-      var grade, sel, word, _ref;
+      var grade, sel, word, _ref1;
       sel = $(e.target);
       grade = sel.val();
-      word = (_ref = sel.parent().find('label')) != null ? _ref.text() : void 0;
+      word = (_ref1 = sel.parent().find('label')) != null ? _ref1.text() : void 0;
       if (wordLists[grade] != null) {
         wordLists[grade].push(word);
         wordLists[grade].sort();
@@ -277,3 +277,5 @@
   });
 
 }).call(this);
+
+//# sourceMappingURL=grader.map
